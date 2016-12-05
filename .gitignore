@@ -5,5 +5,4 @@ CMakeFiles/
 Makefile
 Mary
 cmake_install.cmake
-data/
-tips/
+*.log
