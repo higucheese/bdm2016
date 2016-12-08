@@ -6,3 +6,4 @@ Makefile
 Mary
 cmake_install.cmake
 *.log
+.DS_Store
