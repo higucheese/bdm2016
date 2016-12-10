@@ -86,7 +86,7 @@ try:
     past_depth = get_depth() # for low pass filtering
 
     phi_degree = 0
-    while phi_degree < 264:
+    while phi_degree < 256:
         phi_move(phi_degree)
         print "phi_degree:" + str(phi_degree)
         phi_degree += PHI_STEP
