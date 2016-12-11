@@ -77,26 +77,25 @@ try:
     while phi_degree < 256:
         phi_move(phi_degree)
         print "phi_degree:" + str(phi_degree)
-        phi_degree += PHI_STEP
 
         theta_degree = 0
         theta_stop()
         while theta_degree <= 96:
             theta_move(theta_degree)
+            print "theta_degree:" + str(theta_degree)
             time.sleep(0.5)
             theta_stop()
+            
             time.sleep(0.5)
-
             frame = camera.read()[1]
             name = "./data/" + str(theta_degree) + "_" + str(phi_degree) + ".png"
             cv2.imwrite(name, frame)
-
-            print "theta_degree:" + str(theta_degree)
-            theta_degree += THETA_STEP
-            
             time.sleep(0.5)
+            
+            theta_degree += THETA_STEP
         
         theta_move()
+        phi_degree += PHI_STEP
 
 except KeyboardInterrupt:
     GPIO.cleanup()
