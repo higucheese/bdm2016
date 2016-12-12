@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import RPi.GPIO as GPIO
 import time
-import smbus
+import cv2
 
 LED_PIN = 37
 SERVO_PHI_PIN = 31
@@ -20,16 +20,13 @@ PHI_192 = 9.25
 PHI_256 = 10.45
 THETA_0 = 9.5
 THETA_64 = 5.8
-PHI_STEP = 1
-THETA_STEP = 1
+PHI_STEP = 32
+THETA_STEP = 24
 LPF_RATE = 0.9
 
 # CalcParams
 THETA_ALPHA = (THETA_0 - THETA_64) / 64.0
 THETA_BETA = THETA_0
-
-i2c = smbus.SMBus(1)
-fp = open("search.log", "w")
 
 try:
     GPIO.output(LED_PIN, True)
@@ -39,6 +36,8 @@ try:
     
     servo_theta = GPIO.PWM(SERVO_THETA_PIN, 50.0)
     servo_theta.start(THETA_BETA)
+
+    camera = cv2.VideoCapture(0)
     
     time.sleep(2.0)
 
@@ -74,43 +73,34 @@ try:
     def theta_stop():
             servo_theta.ChangeDutyCycle(0.0)
 
-    def get_depth():
-        i2c.write_byte_data(0x70, 0, 81)
-        time.sleep(0.07)
-        readdata = i2c.read_word_data(0x70, 2)
-        time.sleep(0.03)
-        highbyte = readdata >> 8
-        lowbyte = readdata ^ (highbyte << 8)
-        return highbyte + (lowbyte << 8)
-
-    past_depth = get_depth() # for low pass filtering
-
     phi_degree = 0
     while phi_degree < 256:
         phi_move(phi_degree)
         print "phi_degree:" + str(phi_degree)
-        phi_degree += PHI_STEP
 
         theta_degree = 0
         theta_stop()
         while theta_degree <= 96:
             theta_move(theta_degree)
-            depth_var = 0.0
-            for i in xrange(5):
-                depth_var += get_depth()
-            depth = depth_var / 5.0
-            depth = round(LPF_RATE * depth + (1.0 - LPF_RATE) * past_depth, 2)
-            past_depth = depth
+            print "theta_degree:" + str(theta_degree)
+            time.sleep(0.5)
             theta_stop()
-            print "theta_degree:" + str(theta_degree) + " depth:" + str(depth) + "cm"
-            fp.write(str(depth) + "," + str(theta_degree) + "," + str(phi_degree) + "\n")
+            
+            time.sleep(0.5)
+            frame = camera.read()[1]
+            name = "./data/" + str(theta_degree) + "_" + str(phi_degree) + ".png"
+            cv2.imwrite(name, frame)
+            time.sleep(0.5)
+            
             theta_degree += THETA_STEP
         
         theta_move()
+        phi_degree += PHI_STEP
 
 except KeyboardInterrupt:
     GPIO.cleanup()
 
 GPIO.output(LED_PIN, False)
-fp.close()
 GPIO.cleanup()
+camera.release()
+cv2.destroyAllWindows()
