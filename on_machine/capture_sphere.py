@@ -20,8 +20,9 @@ PHI_192 = 9.25
 PHI_256 = 10.45
 THETA_0 = 9.5
 THETA_64 = 5.8
-PHI_STEP = 32
-THETA_STEP = 24
+# PHI_STEP = 13.5
+PHI_STEP = 64
+THETA_STEP = 13.7
 LPF_RATE = 0.9
 
 # CalcParams
@@ -40,6 +41,13 @@ try:
     camera = cv2.VideoCapture(0)
     
     time.sleep(2.0)
+
+    CUT_SIZE = 256
+    def clip_frame(frm):
+        height, width, channels = frm.shape
+        th = (height - CUT_SIZE) / 2
+        tw = (width - CUT_SIZE) / 2
+        return frm[th:th + CUT_SIZE, tw:tw + CUT_SIZE]
 
     def phi_move(degree = 0):
         if degree > 256 or degree < 0:
@@ -87,9 +95,9 @@ try:
             theta_stop()
             
             time.sleep(0.5)
-            frame = camera.read()[1]
+            clip = clip_frame(camera.read()[1])
             name = "./data/" + str(theta_degree) + "_" + str(phi_degree) + ".png"
-            cv2.imwrite(name, frame)
+            cv2.imwrite(name, clip)
             time.sleep(0.5)
             
             theta_degree += THETA_STEP
