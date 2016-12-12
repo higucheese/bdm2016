@@ -2,6 +2,7 @@
 import RPi.GPIO as GPIO
 import time
 import cv2
+from capture import *
 
 LED_PIN = 37
 SERVO_PHI_PIN = 31
@@ -20,8 +21,7 @@ PHI_192 = 9.25
 PHI_256 = 10.45
 THETA_0 = 9.5
 THETA_64 = 5.8
-# PHI_STEP = 13.5
-PHI_STEP = 64
+PHI_STEP = 13.5
 THETA_STEP = 13.7
 LPF_RATE = 0.9
 
@@ -38,16 +38,7 @@ try:
     servo_theta = GPIO.PWM(SERVO_THETA_PIN, 50.0)
     servo_theta.start(THETA_BETA)
 
-    camera = cv2.VideoCapture(0)
-    
     time.sleep(2.0)
-
-    CUT_SIZE = 256
-    def clip_frame(frm):
-        height, width, channels = frm.shape
-        th = (height - CUT_SIZE) / 2
-        tw = (width - CUT_SIZE) / 2
-        return frm[th:th + CUT_SIZE, tw:tw + CUT_SIZE]
 
     def phi_move(degree = 0):
         if degree > 256 or degree < 0:
@@ -95,9 +86,7 @@ try:
             theta_stop()
             
             time.sleep(0.5)
-            clip = clip_frame(camera.read()[1])
-            name = "./data/" + str(theta_degree) + "_" + str(phi_degree) + ".png"
-            cv2.imwrite(name, clip)
+            capture(theta_degree, phi_degree)
             time.sleep(0.5)
             
             theta_degree += THETA_STEP
@@ -110,5 +99,3 @@ except KeyboardInterrupt:
 
 GPIO.output(LED_PIN, False)
 GPIO.cleanup()
-camera.release()
-cv2.destroyAllWindows()
