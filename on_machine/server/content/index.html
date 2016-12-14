@@ -10,10 +10,12 @@ ul.servo li{
   margin-bottom : 0px;
 }
 </style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 <h2 style="color:navy; font-size:180%;">Mary Admin Page</h2>
 <ul style="list-style-type:square; font-size:150%;" class="category">
   <li>LED Flashing
-    <button type=button id="led" onclick="alert('LED Flashing')">Try</button>
+    <button type=button id="led">Try</button>
   </li>
   <li>WEBcam Capture
     <button type=button id="capture" onclick="alert('WEBcam Capture')">
@@ -79,3 +81,10 @@ ul.servo li{
       </li>
   </li>
 </ul>
+
+<script type="text/javascript">
+var ioSocket = io.connect("http://192.168.2.100");
+$("#led").click(function(){
+  ioSocket.emit("led", { value : message } );
+});
+</script>

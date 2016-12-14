@@ -7,9 +7,8 @@ ras-server.js
 */
 
 /* http server */
-
-var http = require("http");
 var fs = require("fs");
+var http = require("http");
 var server = http.createServer();
 
 server.on("request", function(req, res){
@@ -20,13 +19,21 @@ server.on("request", function(req, res){
             res.write("404 Not Found");
             return res.end();
         }
+        stream.pipe(res);
         res.writeHead(200, {"Content-Type" : "text/html"});
         res.write(data);
         res.end();
     });
 });
 
-
+var io = require("socket.io").listen(server);
 var PORT = 80;
-
 server.listen(PORT);
+
+var exec = require("child_process").exec;
+
+io.socket.on("connection", function(socket){
+  socket.on("led", function(){
+    exec("python ../", function(){});
+  });
+});
