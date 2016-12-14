@@ -1,18 +1,76 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="vieport" content="initial-scale=1.0">
-        <title>BDM設定</title>
-    </head>
-    <body>
-        <p>Hello World!</p>
-        <div id="directions"></div>
-        <p>0:North<br>90:West<br>180:South<br>270:East</p>
+<meta charset="utf-8">
+<meta name="vieport" content="initial-scale=1.0">
+<title>BDM設定</title>
+<style type="text/css">
+ul.category li{
+  margin-bottom : 10px;
+}
+ul.servo li{
+  margin-bottom : 0px;
+}
+</style>
+<h2 style="color:navy; font-size:180%;">Mary Admin Page</h2>
+<ul style="list-style-type:square; font-size:150%;" class="category">
+  <li>LED Flashing
+    <button type=button id="led" onclick="alert('LED Flashing')">Try</button>
+  </li>
+  <li>WEBcam Capture
+    <button type=button id="capture" onclick="alert('WEBcam Capture')">
+      Try
+    </button>
+  </li>
+  <li>Set Servo<br>
+    <ul style="list-style-type:disc; font-size:80%;" class="servo">
+      <li>Theta:
+        <input type="number" name="theta" placeholder="0~96">
+        <button type=button id="theta_button" onclick="alert('Theta')">Try</button>
+      </li>
+      <li>Phi:
+        <input type="number" name="phi" placeholder="0~256">
+        <button type=button id="phi_button" onclick="alert('Phi')">Try</button>
+      </li>
+    </ul>
+  </li>
+  <li>Get Depth
+    <button type=button id="depth" onclick="alert('Get depth')">Try</button>
+  </li>
+  <li>Get Omnidirectional Scene
+    <button type=button id="omni" onclick="alert('Get Omni')">Try</button>
+  </li>
+  <li>Get Locale
+    <button type=button id="locale" onclick="alert('Get Locale')">Try</button>
+    <ul style="list-style-type:disc; font-size:80%;">
+      <li>
+        Direction:<div id="directions"></div>
         <script>
-        window.addEventListener("deviceorientation", function(event){
-            document.getElementById("directions").innerHTML = event.alpha;
+          window.addEventListener("deviceorientation", function(event){
+          document.getElementById("directions").innerHTML = event.alpha;
         });
         </script>
-    </body>
-</html>
+        0:North 90:West 180:South 270:East
+      </li>
+      <li>
+        GPS:<ul id="gps"></ul>
+        <script type="text/javascript">
+          if (navigator.geolocation) {
+            // 現在の位置情報取得を実施
+            navigator.geolocation.getCurrentPosition(
+              // 位置情報取得成功時
+              function (pos) {
+                var location ="<li>"+"Latitude:" + pos.coords.latitude + "</li>";
+                location += "<li>"+"Longitude:" + pos.coords.longitude + "</li>";
+                document.getElementById("location").innerHTML = location;
+              },
+              // 位置情報取得失敗時
+              function (pos) {
+                var location ="<li>位置情報が取得できませんでした。</li>";
+                document.getElementById("location").innerHTML = location;
+              });
+            } else {
+              window.alert("本ブラウザではGeolocationが使えません");
+            }
+        </script>
+      </li>
+  </li>
+</ul>
