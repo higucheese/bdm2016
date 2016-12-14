@@ -11,7 +11,15 @@ ul.servo li{
 }
 </style>
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="./socketfunc.js"></script>
+<!--<script type="text/javascript" src="./socketfunc.js"></script> -->
+<script type="text/javascript">
+var ioSocket = io.connect();
+
+function button_led(){
+  ioSocket.emit("led", {} );
+  alert("led flash");
+}
+</script>
 
 <h2 style="color:navy; font-size:180%;">Mary Admin Page</h2>
 <ul style="list-style-type:square; font-size:150%;" class="category">
