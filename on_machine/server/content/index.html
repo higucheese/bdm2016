@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="vieport" content="initial-scale=1.0">
         <title>BDM設定</title>
     </head>
     <body>
         <p>Hello World!</p>
+        <div id="directions"></div>
+        <p>0:North<br>90:West<br>180:South<br>270:East</p>
+        <script>
+        window.addEventListener("deviceorientation", function(event){
+            document.getElementById("directions").innerHTML = event.alpha;
+        });
+        </script>
     </body>
 </html>
