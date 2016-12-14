@@ -51,7 +51,8 @@ ul.servo li{
         0:North 90:West 180:South 270:East
       </li>
       <li>
-        GPS:<ul id="gps"></ul>
+        GPS:<ul id="gps"></ul><br>
+        Altitude:<div id="alt"></div>
         <script type="text/javascript">
           if (navigator.geolocation) {
             // 現在の位置情報取得を実施
@@ -60,15 +61,19 @@ ul.servo li{
               function (pos) {
                 var location ="<li>"+"Latitude:" + pos.coords.latitude + "</li>";
                 location += "<li>"+"Longitude:" + pos.coords.longitude + "</li>";
-                document.getElementById("location").innerHTML = location;
+                document.getElementById("gps").innerHTML = location;
+                document.getElementById("alt").innerHTML = pos.coords.altitude;
               },
               // 位置情報取得失敗時
               function (pos) {
-                var location ="<li>位置情報が取得できませんでした。</li>";
-                document.getElementById("location").innerHTML = location;
+                var location ="<li>NO REAULT</li>";
+                document.getElementById("gps").innerHTML = location;
+                var altitude = "NO RESULT";
+                document.getElementById("alt").innerHTML = altitude;
               });
+
             } else {
-              window.alert("本ブラウザではGeolocationが使えません");
+              window.alert("This Browser can not use Geolocation.");
             }
         </script>
       </li>
