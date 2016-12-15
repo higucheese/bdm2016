@@ -63,7 +63,8 @@ onload = function(){
     // uniformLocationを配列に取得
     var uniLocation = new Array();
     uniLocation[0] = gl.getUniformLocation(prg, 'mvpMatrix');
-    uniLocation[1] = gl.getUniformLocation(prg, 'texture');
+    uniLocation[1] = gl.getUniformLocation(prg, 'texture0');
+    uniLocation[2] = gl.getUniformLocation(prg, 'texture1');
 
     // minMatrix.js を用いた行列関連処理
     // matIVオブジェクトを生成
@@ -86,10 +87,10 @@ onload = function(){
     gl.depthFunc(gl.LEQUAL);
     // gl.enable(gl.CULL_FACE);
 
-    gl.activeTexture(gl.TEXTURE0);
-
-    var texture = null;
-    create_texture('texture2.png');
+    var texture0 = null;
+    var texture1 = null;
+    create_texture('texture0.png', 0);
+    create_texture('texture1.png', 1);
     var count = 0;
 
     // 恒常ループ
@@ -105,8 +106,13 @@ onload = function(){
         // カウンタを元にラジアンを算出
         var rad = (count % 360) * Math.PI / 180;
 
-        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture0);
         gl.uniform1i(uniLocation[1], 0);
+
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, texture1);
+        gl.uniform1i(uniLocation[2], 1);
 
         // モデル座標変換行列の生成
         m.identity(mMatrix);
@@ -299,7 +305,7 @@ onload = function(){
         return color;
     }
 
-    function create_texture(source) {
+    function create_texture(source, number) {
         var img = new Image();
         img.onload = function() {
             var tex = gl.createTexture();
@@ -307,6 +313,16 @@ onload = function(){
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
             gl.generateMipmap(gl.TEXTURE_2D);
             gl.bindTexture(gl.TEXTURE_2D, null);
+            switch (number) {
+                case 0:
+                    texture0 = tex;
+                    break;
+                case 1:
+                    texture1 = tex;
+                    break;
+                default:
+                    break;
+            }
             texture = tex;
         }
         img.src = source;
