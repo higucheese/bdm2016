@@ -24,10 +24,12 @@ function button_webcam(){
   ioSocket.emit("webcam", {} );
 }
 function button_theta(){
-  ioSocket.emit("theta", {} );
+  var element = document.getElementById("theta").value;
+  ioSocket.emit("theta", {value:element} );
 }
 function button_phi(){
-  ioSocket.emit("phi", {} );
+  var element = document.getElementById("phi").value;
+  ioSocket.emit("phi", {value:element} );
 }
 function button_depth(){
   ioSocket.emit("depth", {} );
@@ -49,11 +51,11 @@ function button_omni(){
   <li>Servo Test<br>
     <ul style="list-style-type:disc; font-size:80%;" class="servo">
       <li>Theta:
-        <input type="number" name="theta" placeholder="0~96">
+        <input type="number" value="0" id="theta" placeholder="0~96">
         <button type=button id="theta_button" onclick="button_theta()">Try</button>
       </li>
       <li>Phi:
-        <input type="number" name="phi" placeholder="0~256">
+        <input type="number" value="0" id="phi" placeholder="0~256">
         <button type=button id="phi_button" onclick="button_phi()">Try</button>
       </li>
     </ul>

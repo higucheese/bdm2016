@@ -50,4 +50,12 @@ io.sockets.on("connection", function(socket){
   socket.on("webcam", function(){
     exec("python ../capture_test.py", function(){});
   });
+  socket.on("theta", function(val){
+    var command = "python ../servo_theta.py " + val.value;
+    exec(command, function(){});
+  });
+  socket.on("phi", function(val){
+    var command = "python ../servo_phi.py " + val.value;
+    exec(command, function(){});
+  });
 });
