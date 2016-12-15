@@ -6,8 +6,7 @@ if camera.isOpened() is False:
     raise("camera IO Error")
 
 frame = camera.read()[1]
-height, width, channels = frame.shape
-cv2.imwrite("frame.png", frame)
+cv2.imwrite("/home/pi/bdm2016/on_machine/frame.png", frame)
 camera.release()
 
 cv2.destroyAllWindows()
