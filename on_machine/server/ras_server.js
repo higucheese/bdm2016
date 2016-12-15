@@ -63,10 +63,10 @@ io.sockets.on("connection", function(socket){
       io.sockets.emit("depth_stdout", {value:stdout});
     });
   });
-  socket.on("omni_depth", function'(){
+  socket.on("omni_depth", function(){
     exec("python ../search.py", function(){});
   });
-  socket.on("omni_scene", function'(){
+  socket.on("omni_scene", function(){
     exec("python ../capture_sphere.py", function(){});
   });
 });
