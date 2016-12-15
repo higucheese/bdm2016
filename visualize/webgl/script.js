@@ -1,20 +1,11 @@
 onload = function(){
     // canvasエレメントを取得
     var c = document.getElementById('canvas');
-    c.width = 300;
+    c.width = 500;
     c.height = 300;
 
     // webglコンテキストを取得
     var gl = c.getContext('webgl') || c.getContext('experimental-webgl');
-    
-    // canvasを初期化する色を設定する
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    
-    // canvasを初期化する際の深度を設定する
-    gl.clearDepth(1.0);
-    
-    // canvasを初期化
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     
     // 頂点シェーダとフラグメントシェーダの生成
     var v_shader = create_shader('vs');
@@ -35,33 +26,33 @@ onload = function(){
     
     // vertex の位置データ
     var vertex_position = [
-         0.0, 1.0, 0.0,
-         1.0, 0.0, 0.0,
-        -1.0, 0.0, 0.0
+         0.0,  1.0,  0.0,
+         1.0,  0.0,  0.0,
+        -1.0,  0.0,  0.0,
+         0.0, -1.0,  0.0
     ];
     // vertex の色データ
     var vertex_color = [
         1.0, 0.0, 0.0, 1.0,
         0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0
+        0.0, 0.0, 1.0, 1.0,
+        1.0, 1.0, 1.0, 1.0
+    ];
+    var index = [
+        0, 1, 2,
+        1, 2, 3
     ];
     
     // VBOの生成
-    var position_vbo = create_vbo(vertex_position);
-    var color_vbo = create_vbo(vertex_color);
-    
-    // VBOをバインド（位置情報）
-    gl.bindBuffer(gl.ARRAY_BUFFER, position_vbo);
-    // attribute属性を有効にする
-    gl.enableVertexAttribArray(attLocation[0]);
-    // attribute属性を登録
-    gl.vertexAttribPointer(attLocation[0], attStride[0], gl.FLOAT, false, 0, 0);
-    
-    // VBOをバインド（色情報）
-    gl.bindBuffer(gl.ARRAY_BUFFER, color_vbo);
-    gl.enableVertexAttribArray(attLocation[1]);
-    gl.vertexAttribPointer(attLocation[1], attStride[1], gl.FLOAT, false, 0, 0);
+    var pos_vbo = create_vbo(vertex_position);
+    var col_vbo = create_vbo(vertex_color);
+    set_attribute([pos_vbo, col_vbo], attLocation, attStride);
+    // IBOをバウンド
+    var ibo = create_ibo(index);
 
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+    var uniLocation = gl.getUniformLocation(prg, 'mvpMatrix');
+    
     // minMatrix.js を用いた行列関連処理
     // matIVオブジェクトを生成
     var m = new matIV();
@@ -74,10 +65,9 @@ onload = function(){
     var mvpMatrix = m.identity(m.create());
 
     // あらかじめView x Projection Matrixを用意
-    m.lookAt([0.0, 0.0, 3.0], [0, 0, 0], [0, 1, 0], vMatrix);
-    m.perspective(90, c.width / c.height, 0.1, 100, pMatrix);
+    m.lookAt([0.0, 0.0, 5.0], [0, 0, 0], [0, 1, 0], vMatrix);
+    m.perspective(45, c.width / c.height, 0.1, 100, pMatrix);
     m.multiply(pMatrix, vMatrix, vpMatrix);
-    var uniLocation = gl.getUniformLocation(prg, 'mvpMatrix');
 
     var count = 0;
 
@@ -91,31 +81,12 @@ onload = function(){
 
         var rad = (count % 360) * Math.PI / 180;
 
-        var x = Math.cos(rad);
-        var y = Math.sin(rad);
         m.identity(mMatrix);
-        m.translate(mMatrix, [x, y+1.0, 0.0], mMatrix);
-
-        m.multiply(vpMatrix, mMatrix, mvpMatrix);
-        gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
-
-        m.identity(mMatrix);
-        m.translate(mMatrix, [1.0, -1.0, 0.0], mMatrix);
         m.rotate(mMatrix, rad, [0, 1, 0], mMatrix);
-
         m.multiply(vpMatrix, mMatrix, mvpMatrix);
         gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-        var s = Math.sin(rad) + 1.0;
-        m.identity(mMatrix);
-        m.translate(mMatrix, [-1.0, -1.0, 0.0], mMatrix);
-        m.scale(mMatrix, [s, s, 0.0], mMatrix);
-
-        m.multiply(vpMatrix, mMatrix, mvpMatrix);
-        gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
-        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        gl.drawElements(gl.TRIANGLES, index.length, gl.UNSIGNED_SHORT, 0);
 
         gl.flush();
 
@@ -212,5 +183,39 @@ onload = function(){
         // 生成した VBO を返して終了
         return vbo;
     }
+
+    // VBOをバインドし登録する関数
+    function set_attribute(vbo, attL, attS){
+        // 引数として受け取った配列を処理する
+        for(var i in vbo){
+            // バッファをバインドする
+            gl.bindBuffer(gl.ARRAY_BUFFER, vbo[i]);
+            
+            // attributeLocationを有効にする
+            gl.enableVertexAttribArray(attL[i]);
+            
+            // attributeLocationを通知し登録する
+            gl.vertexAttribPointer(attL[i], attS[i], gl.FLOAT, false, 0, 0);
+        }
+    }
+
+    // IBOを生成する関数
+    function create_ibo(data){
+        // バッファオブジェクトの生成
+        var ibo = gl.createBuffer();
+        
+        // バッファをバインドする
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+        
+        // バッファにデータをセット
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Int16Array(data), gl.STATIC_DRAW);
+        
+        // バッファのバインドを無効化
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+        
+        // 生成したIBOを返して終了
+        return ibo;
+    }
+
 
 };
