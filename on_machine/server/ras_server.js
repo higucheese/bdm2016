@@ -19,7 +19,6 @@ server.on("request", function(req, res){
             res.write("404 Not Found");
             return res.end();
         }
-        stream.pipe(res);
         res.writeHead(200, {"Content-Type" : "text/html"});
         res.write(data);
         res.end();
@@ -32,8 +31,9 @@ server.listen(PORT);
 
 var exec = require("child_process").exec;
 
-io.socket.on("connection", function(socket){
+io.sockets.on("connection", function(socket){
   socket.on("led", function(){
-    exec("python ../", function(){});
+    exec("python ../led_test.py", function(){});
+    console.log("led flash");
   });
 });
