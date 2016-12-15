@@ -13,7 +13,7 @@ def capture(theta, phi):
     t_width = (width - CUT_SIZE) / 2
     clp = frame[t_height:t_height + CUT_SIZE, t_width:t_width + CUT_SIZE]
 
-    name = "./data/" + str(theta) + "_" + str(phi) + ".png"
+    name = "/home/pi/bdm2016/on_machine/data/" + str(theta) + "_" + str(phi) + ".png"
     cv2.imwrite(name, clp)
 
     camera.release()

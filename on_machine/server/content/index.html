@@ -17,6 +17,10 @@ ul.locale li{
 
 <script type="text/javascript">
 var ioSocket = io.connect();
+ioSocket.on("depth_stdout", function(stdout){
+  var depth = stdout.value + "mm";
+  document.getElementById("depth_result").innerHTML = depth;
+});
 function button_led(){
   ioSocket.emit("led", {} );
 }
@@ -34,8 +38,11 @@ function button_phi(){
 function button_depth(){
   ioSocket.emit("depth", {} );
 }
-function button_omni(){
-  ioSocket.emit("omni", {} );
+function button_omni_depth(){
+  ioSocket.emit("omni_depth", {} );
+}
+function button_omni_scene(){
+  ioSocket.emit("omni_scene", {} );
 }
 </script>
 
@@ -61,14 +68,14 @@ function button_omni(){
     </ul>
   </li>
   <li>Depth Test
-    <button type=button id="depth" onclick="alert('Get depth')">Try</button>
+    <button type=button id="depth" onclick="button_depth()">Try</button>
     <div id="depth_result"></div>
   </li>
   <li>Get Omnidirectional Depth
-    <button type=button id="omni_scene" onclick="alert('Get Omni')">Try</button>
+    <button type=button id="omni_depth" onclick="button_omni_depth()">Try</button>
   </li>
   <li>Get Omnidirectional Scene
-    <button type=button id="omni_scene" onclick="alert('Get Omni')">Try</button>
+    <button type=button id="omni_scene" onclick="button_omni_scene()">Try</button>
   </li>
   <li>Locale<br>
     <ul style="list-style-type:disc; font-size:80%;" class="locale">
