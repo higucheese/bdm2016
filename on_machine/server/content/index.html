@@ -4,91 +4,110 @@
 <title>BDM設定</title>
 <style type="text/css">
 ul.category li{
-  margin-bottom : 10px;
+  margin-bottom : 3px;
 }
 ul.servo li{
   margin-bottom : 0px;
 }
+ul.locale li{
+  margin-bottom : 0px;
+}
 </style>
 <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-<!--<script type="text/javascript" src="./socketfunc.js"></script> -->
+
 <script type="text/javascript">
 var ioSocket = io.connect();
-
 function button_led(){
   ioSocket.emit("led", {} );
-  alert("led flash");
+}
+function button_webcam(){
+  ioSocket.emit("webcam", {} );
+}
+function button_theta(){
+  ioSocket.emit("theta", {} );
+}
+function button_phi(){
+  ioSocket.emit("phi", {} );
+}
+function button_depth(){
+  ioSocket.emit("depth", {} );
+}
+function button_omni(){
+  ioSocket.emit("omni", {} );
 }
 </script>
 
 <h2 style="color:navy; font-size:180%;">Mary Admin Page</h2>
 <ul style="list-style-type:square; font-size:150%;" class="category">
-  <li>LED Flashing
+  <li>LED Test
     <button type=button id="led" onclick="button_led()">Try</button>
   </li>
-  <li>WEBcam Capture
-    <button type=button id="capture" onclick="alert('WEBcam Capture')">
-      Try
-    </button>
+  <li>WEBcamera Test
+    <button type=button id="webcam" onclick="button_webcam()">Try</button><br>
+    <img src="../../frame.png" width="80px" height="60px" title="frame.png">
   </li>
-  <li>Set Servo<br>
+  <li>Servo Test<br>
     <ul style="list-style-type:disc; font-size:80%;" class="servo">
       <li>Theta:
         <input type="number" name="theta" placeholder="0~96">
-        <button type=button id="theta_button" onclick="alert('Theta')">Try</button>
+        <button type=button id="theta_button" onclick="button_theta()">Try</button>
       </li>
       <li>Phi:
         <input type="number" name="phi" placeholder="0~256">
-        <button type=button id="phi_button" onclick="alert('Phi')">Try</button>
+        <button type=button id="phi_button" onclick="button_phi()">Try</button>
       </li>
     </ul>
   </li>
-  <li>Get Depth
+  <li>Depth Test
     <button type=button id="depth" onclick="alert('Get depth')">Try</button>
+    <div id="depth_result"></div>
+  </li>
+  <li>Get Omnidirectional Depth
+    <button type=button id="omni_scene" onclick="alert('Get Omni')">Try</button>
   </li>
   <li>Get Omnidirectional Scene
-    <button type=button id="omni" onclick="alert('Get Omni')">Try</button>
+    <button type=button id="omni_scene" onclick="alert('Get Omni')">Try</button>
   </li>
-  <li>Get Locale
-    <button type=button id="locale" onclick="alert('Get Locale')">Try</button>
-    <ul style="list-style-type:disc; font-size:80%;">
+  <li>Locale<br>
+    <ul style="list-style-type:disc; font-size:80%;" class="locale">
       <li>
-        Direction:<div id="directions"></div>
+        Direction:[<span id="directions"></span>]
         <script>
           window.addEventListener("deviceorientation", function(event){
           document.getElementById("directions").innerHTML = event.alpha;
         });
         </script>
-        0:North 90:West 180:South 270:East
       </li>
       <li>
-        GPS:<ul id="gps"></ul><br>
-        Altitude:<div id="alt"></div>
-        <script type="text/javascript">
-          if (navigator.geolocation) {
-            // 現在の位置情報取得を実施
-            navigator.geolocation.getCurrentPosition(
-              // 位置情報取得成功時
-              function (pos) {
-                var location ="<li>"+"Latitude:" + pos.coords.latitude + "</li>";
-                location += "<li>"+"Longitude:" + pos.coords.longitude + "</li>";
-                document.getElementById("gps").innerHTML = location;
-                document.getElementById("alt").innerHTML = pos.coords.altitude;
-              },
-              // 位置情報取得失敗時
-              function (pos) {
-                var location ="<li>NO REAULT</li>";
-                document.getElementById("gps").innerHTML = location;
-                var altitude = "NO RESULT";
-                document.getElementById("alt").innerHTML = altitude;
-              });
-
-            } else {
-              window.alert("This Browser can not use Geolocation.");
-            }
-        </script>
+        Latitude:[<span id="latitude"></span>]
       </li>
+      <li>
+        Longitude:[<span id="longitude"></span>]
+      </li>
+      <li>
+        Altitude:[<span id="altitude"></span>]
+      </li>
+      <script type="text/javascript">
+        if (navigator.geolocation) {
+          // 現在の位置情報取得を実施
+          navigator.geolocation.getCurrentPosition(
+            // 位置情報取得成功時
+            function (pos) {
+              document.getElementById("latitude").innerHTML = pos.coords.latitude;
+              document.getElementById("longitude").innerHTML = pos.coords.longitude;
+              document.getElementById("altitude").innerHTML = pos.coords.altitude;
+            },
+            // 位置情報取得失敗時
+            function (pos) {
+              var fail = "Failed..";
+              document.getElementById("latitude").innerHTML = fail;
+              document.getElementById("longitude").innerHTML = fail;
+              document.getElementById("alttitude").innerHTML = fail;
+            });
+          } else {
+            window.alert("This Browser can not use Geolocation.");
+          }
+      </script>
+    </ul>
   </li>
 </ul>
-
-

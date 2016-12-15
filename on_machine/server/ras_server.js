@@ -29,11 +29,14 @@ var io = require("socket.io").listen(server);
 var PORT = 80;
 server.listen(PORT);
 
-var exec = require("child_process").exec;
+var execSync = require("child_process").execSync;
 
 io.sockets.on("connection", function(socket){
   socket.on("led", function(){
-    exec("python ../led_test.py", function(){});
-    console.log("led flash");
+    execSync("python ../led_test.py", function(){});
+    alert("led test");
+  });
+  socket.on("webcam", fucntion(socket){
+    execSync("python ../capture_test.py", function'({}));
   });
 });
