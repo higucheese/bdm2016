@@ -70,26 +70,31 @@ onload = function(){
     var mMatrix = m.identity(m.create());
     var vMatrix = m.identity(m.create());
     var pMatrix = m.identity(m.create());
+    var vpMatrix = m.identity(m.create());
     var mvpMatrix = m.identity(m.create());
-    
-    // ビュー座標変換行列
-    m.lookAt([0.0, 1.0, 3.0], [0, 0, 0], [0, 1, 0], vMatrix);
-    
-    // プロジェクション座標変換行列
+
+    // あらかじめView x Projection Matrixを用意
+    m.lookAt([0.0, 0.0, 3.0], [0, 0, 0], [0, 1, 0], vMatrix);
     m.perspective(90, c.width / c.height, 0.1, 100, pMatrix);
-    
-    // 各行列を掛け合わせ座標変換行列を完成させる
-    m.multiply(pMatrix, vMatrix, mvpMatrix);
-    m.multiply(mvpMatrix, mMatrix, mvpMatrix);
-    
+    m.multiply(pMatrix, vMatrix, vpMatrix); 
+
+    // 一つ目のモデルの位置
+    m.translate(mMatrix, [1.5, 0.0, 0.0], mMatrix);
+    m.multiply(vpMatrix, mMatrix, mvpMatrix);
     // uniformLocationの取得
     var uniLocation = gl.getUniformLocation(prg, 'mvpMatrix');
-    
     // uniformLocationへ座標変換行列を登録
-    gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
-    
+    gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);    
     // モデルの描画
     gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    // 2つ目のモデルの位置
+    m.identity(mMatrix);
+    m.translate(mMatrix, [-1.5, 0.0, 0.0], mMatrix);
+    m.multiply(vpMatrix, mMatrix, mvpMatrix);
+    gl.uniformMatrix4fv(uniLocation, false, mvpMatrix);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
     
     // コンテキストの再描画
     gl.flush();
