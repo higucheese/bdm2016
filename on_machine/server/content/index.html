@@ -21,6 +21,13 @@ ioSocket.on("depth_stdout", function(stdout){
   var depth = stdout.value + "mm";
   document.getElementById("depth_result").innerHTML = depth;
 });
+function button_reboot(){
+  if(window.confirm("Are you sure to reboot?")){
+    ioSocket.emit("reboot", {} );
+  } else {
+    alert("Reboot Canceled.");
+  }
+}
 function button_led(){
   ioSocket.emit("led", {} );
 }
@@ -48,6 +55,9 @@ function button_omni_scene(){
 
 <h2 style="color:navy; font-size:180%;">Mary Admin Page</h2>
 <ul style="list-style-type:square; font-size:150%;" class="category">
+  <li>Reboot
+    <button type=button id="reboot" onclick="button_reboot()">Try</button>
+  </li>
   <li>LED Test
     <button type=button id="led" onclick="button_led()">Try</button>
   </li>

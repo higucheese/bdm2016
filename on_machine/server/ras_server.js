@@ -44,6 +44,9 @@ server.listen(PORT);
 var exec = require("child_process").exec;
 
 io.sockets.on("connection", function(socket){
+  socket.on("reboot", function(){
+    exec("reboot", function(){});
+  });
   socket.on("led", function(){
     exec("python ../led_test.py", function(){});
   });
