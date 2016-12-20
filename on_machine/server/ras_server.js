@@ -15,7 +15,7 @@ server.on("request", function(req, res){
 
   if (req.url == "/"){
     var fs = require("fs");
-    fs.readFile("./content/index.html", "utf-8", function(err, data){
+    fs.readFile("/home/pi/bdm2016/on_machine/server/content/index.html", "utf-8", function(err, data){
       if(err){
         res.writeHead(404, {"Content-Type" : "text/plain"});
         res.write("404 Not Found");
@@ -48,28 +48,28 @@ io.sockets.on("connection", function(socket){
     exec("reboot", function(){});
   });
   socket.on("led", function(){
-    exec("python ../led_test.py", function(){});
+    exec("python /home/pi/bdm2016/on_machine/led_test.py", function(){});
   });
   socket.on("webcam", function(){
-    exec("python ../capture_test.py", function(){});
+    exec("python /home/pi/bdm2016/on_machine/capture_test.py", function(){});
   });
   socket.on("theta", function(val){
-    var command = "python ../servo_theta.py " + val.value;
+    var command = "python /home/pi/bdm2016/on_machine/servo_theta.py " + val.value;
     exec(command, function(){});
   });
   socket.on("phi", function(val){
-    var command = "python ../servo_phi.py " + val.value;
+    var command = "python /home/pi/bdm2016/on_machine/servo_phi.py " + val.value;
     exec(command, function(){});
   });
   socket.on("depth", function(){
-    exec("python ../depth_test.py", function(err, stdout, stderr){
+    exec("python /home/pi/bdm2016/on_machine/depth_test.py", function(err, stdout, stderr){
       io.sockets.emit("depth_stdout", {value:stdout});
     });
   });
   socket.on("omni_depth", function(){
-    exec("python ../search.py", function(){});
+    exec("python /home/pi/bdm2016/on_machine/search.py", function(){});
   });
   socket.on("omni_scene", function(){
-    exec("python ../capture_sphere.py", function(){});
+    exec("python /home/pi/bdm2016/on_machine/capture_sphere.py", function(){});
   });
 });
