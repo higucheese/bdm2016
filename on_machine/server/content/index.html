@@ -18,7 +18,7 @@ ul.locale li{
 <script type="text/javascript">
 var ioSocket = io.connect();
 ioSocket.on("depth_stdout", function(stdout){
-  var depth = stdout.value + "mm";
+  var depth = stdout.value + "cm";
   document.getElementById("depth_result").innerHTML = depth;
 });
 function button_reboot(){
