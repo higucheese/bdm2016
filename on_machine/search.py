@@ -96,8 +96,14 @@ try:
         while theta_degree <= 96:
             theta_move(theta_degree)
             depth_var = 0.0
+            depth_temp = 0.0
             for i in xrange(5):
-                depth_var += get_depth()
+                try:
+                    depth_temp = get_depth()
+                except:
+                    pass
+                depth_var += depth_temp
+                    
             depth = depth_var / 5.0
             depth = round(LPF_RATE * depth + (1.0 - LPF_RATE) * past_depth, 2)
             past_depth = depth
@@ -110,7 +116,8 @@ try:
 
 except KeyboardInterrupt:
     GPIO.cleanup()
-
-GPIO.output(LED_PIN, False)
-fp.close()
-GPIO.cleanup()
+    
+else: # if no error happened
+    GPIO.output(LED_PIN, False)
+    fp.close()
+    GPIO.cleanup()
