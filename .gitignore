@@ -7,3 +7,4 @@ Mary
 cmake_install.cmake
 *.log
 node_modules/
+*.out
