@@ -67,9 +67,9 @@ io.sockets.on("connection", function(socket){
     });
   });
   socket.on("omni_depth", function(){
-    exec("python /home/pi/bdm2016/on_machine/search.py > /dev/null", function(){});
+    exec("sudo nohup python /home/pi/bdm2016/on_machine/search.py &", function(){});
   });
   socket.on("omni_scene", function(){
-    exec("python /home/pi/bdm2016/on_machine/capture_sphere.py > /dev/null", function(){});
+    exec("sudo nouhup python /home/pi/bdm2016/on_machine/capture_sphere.py &", function(){});
   });
 });
