@@ -89,22 +89,19 @@ try:
     while phi_degree < 256:
         phi_move(phi_degree)
         print "phi_degree:" + str(phi_degree)
-        phi_degree += PHI_STEP
 
         theta_degree = 0
         theta_stop()
         while theta_degree <= 96:
             theta_move(theta_degree)
-            depth_var = 0.0
-            depth_temp = 0.0
+            depth_temp = []
             for i in xrange(5):
                 try:
-                    depth_temp = get_depth()
+                    depth_temp.append(get_depth())
                 except:
                     pass
-                depth_var += depth_temp
                     
-            depth = depth_var / 5.0
+            depth = min(depth_temp)
             depth = round(LPF_RATE * depth + (1.0 - LPF_RATE) * past_depth, 2)
             past_depth = depth
             theta_stop()
@@ -113,6 +110,7 @@ try:
             theta_degree += THETA_STEP
         
         theta_move()
+        phi_degree += PHI_STEP
 
 except KeyboardInterrupt:
     GPIO.cleanup()
