@@ -95,13 +95,16 @@ for i in xrange(0, len(walls)):
     for k in del_flag:
         del wall.dots[k]
 
-fp = open("./data/walls.log", "w")
+fp = open("./data/walls_dots.log", "w")
+fp2 = open("./data/walls.log", "w")
 for wall in walls:
+    fp.write(str(len(wall.dots)) + "\n")
+    fp2.write(str(wall.r)+","+str(wall.theta)+","+str(wall.phi)+"\n")
     for dot in wall.dots:
-        print dot
         x = dot[0,0]
         y = dot[0,1]
         z = dot[0,2]
-        fp.write(str(x)+"\t"+str(y)+"\t"+str(z)+"\n")
-        
+        fp.write(str(x)+","+str(y)+","+str(z)+"\n")
+
 fp.close()
+fp2.close()
