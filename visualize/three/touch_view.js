@@ -21,6 +21,7 @@ camera.lookAt(new THREE.Vector3(100, 0, 0));
 
 // マウスでのカメラのコントロール
 var controls = new THREE.TrackballControls(camera);
+controls.rotateSpeed = 2.5;
 // var controls = new THREE.OrbitControls(camera);
 // var controls = new THREE.DeviceOrientationControls(camera);
 
@@ -30,7 +31,7 @@ var controls = new THREE.TrackballControls(camera);
 // loaderの作成
 var loader = new THREE.TextureLoader();
 loader.crossOrigin = '*';
-offset = {x: 200, y: 0, z: 0};
+offset = {x: 0, y: 0, z: 0};
 
 // 各画像を貼り付け
 loader.load('top.png', texture => { // onLoad
