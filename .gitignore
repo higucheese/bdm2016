@@ -7,3 +7,4 @@ Mary
 cmake_install.cmake
 *.log
 .DS_Store
+node_modules/

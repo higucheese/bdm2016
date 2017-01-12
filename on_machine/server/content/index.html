@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="vieport" content="initial-scale=1.0">
+<title>BDM設定</title>
+<style type="text/css">
+ul.category li{
+  margin-bottom : 3px;
+}
+ul.servo li{
+  margin-bottom : 0px;
+}
+ul.locale li{
+  margin-bottom : 0px;
+}
+</style>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+<script type="text/javascript">
+var ioSocket = io.connect();
+ioSocket.on("depth_stdout", function(stdout){
+  var depth = stdout.value + "mm";
+  document.getElementById("depth_result").innerHTML = depth;
+});
+function button_reboot(){
+  if(window.confirm("Are you sure to reboot?")){
+    ioSocket.emit("reboot", {} );
+  } else {
+    alert("Reboot Canceled.");
+  }
+}
+function button_led(){
+  ioSocket.emit("led", {} );
+}
+function button_webcam(){
+  ioSocket.emit("webcam", {} );
+}
+function button_theta(){
+  var element = document.getElementById("theta").value;
+  ioSocket.emit("theta", {value:element} );
+}
+function button_phi(){
+  var element = document.getElementById("phi").value;
+  ioSocket.emit("phi", {value:element} );
+}
+function button_depth(){
+  ioSocket.emit("depth", {} );
+}
+function button_omni_depth(){
+  ioSocket.emit("omni_depth", {} );
+}
+function button_omni_scene(){
+  ioSocket.emit("omni_scene", {} );
+}
+</script>
+
+<h2 style="color:navy; font-size:180%;">Mary Admin Page</h2>
+<ul style="list-style-type:square; font-size:150%;" class="category">
+  <li>Reboot
+    <button type=button id="reboot" onclick="button_reboot()">Try</button>
+  </li>
+  <li>LED Test
+    <button type=button id="led" onclick="button_led()">Try</button>
+  </li>
+  <li>WEBcamera Test
+    <button type=button id="webcam" onclick="button_webcam()">Try</button><br>
+    <img src="../../frame.png" width="80px" height="60px" title="frame.png">
+  </li>
+  <li>Servo Test<br>
+    <ul style="list-style-type:disc; font-size:80%;" class="servo">
+      <li>Theta:
+        <input type="number" value="0" id="theta" placeholder="0~96">
+        <button type=button id="theta_button" onclick="button_theta()">Try</button>
+      </li>
+      <li>Phi:
+        <input type="number" value="0" id="phi" placeholder="0~256">
+        <button type=button id="phi_button" onclick="button_phi()">Try</button>
+      </li>
+    </ul>
+  </li>
+  <li>Depth Test
+    <button type=button id="depth" onclick="button_depth()">Try</button>
+    <div id="depth_result"></div>
+  </li>
+  <li>Get Omnidirectional Depth
+    <button type=button id="omni_depth" onclick="button_omni_depth()">Try</button>
+  </li>
+  <li>Get Omnidirectional Scene
+    <button type=button id="omni_scene" onclick="button_omni_scene()">Try</button>
+  </li>
+  <li>Locale<br>
+    <ul style="list-style-type:disc; font-size:80%;" class="locale">
+      <li>
+        Direction:[<span id="directions"></span>]
+        <script>
+          window.addEventListener("deviceorientation", function(event){
+          document.getElementById("directions").innerHTML = event.alpha;
+        });
+        </script>
+      </li>
+      <li>
+        Latitude:[<span id="latitude"></span>]
+      </li>
+      <li>
+        Longitude:[<span id="longitude"></span>]
+      </li>
+      <li>
+        Altitude:[<span id="altitude"></span>]
+      </li>
+      <script type="text/javascript">
+        if (navigator.geolocation) {
+          // 現在の位置情報取得を実施
+          navigator.geolocation.getCurrentPosition(
+            // 位置情報取得成功時
+            function (pos) {
+              document.getElementById("latitude").innerHTML = pos.coords.latitude;
+              document.getElementById("longitude").innerHTML = pos.coords.longitude;
+              document.getElementById("altitude").innerHTML = pos.coords.altitude;
+            },
+            // 位置情報取得失敗時
+            function (pos) {
+              var fail = "Failed..";
+              document.getElementById("latitude").innerHTML = fail;
+              document.getElementById("longitude").innerHTML = fail;
+              document.getElementById("alttitude").innerHTML = fail;
+            });
+          } else {
+            window.alert("This Browser can not use Geolocation.");
+          }
+      </script>
+    </ul>
+  </li>
+</ul>
