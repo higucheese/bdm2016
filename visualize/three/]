@@ -42,6 +42,6 @@ animate(); // アニメーションを描画
 function animate() {
     // アニメーション
     requestAnimationFrame( animate );
-
+    
     renderer.render( scene, camera );
 }

@@ -56,7 +56,7 @@ onload = function(){
     attStride[2] = 4;
 
     // トーラスモデル
-    var torusData     = torus(64, 64, 1.0, 2.0, [1.0, 1.0, 1.0, 1.0])
+    // var torusData     = torus(63, 64, 1.0, 2.0, [1.0, 1.0, 1.0, 1.0])
     var tPosition     = create_vbo(torusData.p);
     var tNormal       = create_vbo(torusData.n);
     var tColor        = create_vbo(torusData.c);
