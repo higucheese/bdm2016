@@ -17,7 +17,9 @@ var scene = new THREE.Scene();
 // カメラを作成
 var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 2000);
 camera.position.copy(new THREE.Vector3(0, 0, 1));
+// camera.position.copy(new THREE.Vector3(0, 0, 1));
 camera.lookAt(new THREE.Vector3(0, -100, 0));
+// camera.lookAt(new THREE.Vector3(0, -100, 0));
 
 // マウスでのカメラのコントロール
 // var controls = new THREE.TrackballControls(camera);
