@@ -27,7 +27,7 @@ def angle_cos(v1, v2):
     return dotproduct(v1, v2) / (length(v1) * length(v2))
 
 # file read
-fp = open("walls.log", "r")
+fp = open("/home/pi/bdm2016/recognition/data/walls.log", "r")
 for line in fp:
     r = float(line.split(",")[0])
     theta = float(line.split(",")[1])
@@ -37,7 +37,7 @@ for line in fp:
 
 fp.close()
 
-fp2 = open("walls_dots.log", "r")
+fp2 = open("/home/pi/bdm2016/recognition/data/walls_dots.log", "r")
 count = 0
 dots_num = 0
 for line in fp2:
@@ -70,7 +70,6 @@ STEP = 13.5 / 256.0 * 2 * math.pi
 order = [[0, 1], [1, 3], [3, 2], [2, 0]]
 
 for w in xrange(len(wall)):
-    print "hoge"
     canvas = np.zeros((HEIGHT, WIDTH, 3), dtype=np.uint8)
 
     dots_absarray = []
@@ -143,7 +142,7 @@ for w in xrange(len(wall)):
                 if j is 18:
                     phi_name = "0"
                     
-                name = "./data/" + theta_name + "_" + phi_name + ".png"
+                name = "/home/pi/bdm2016/on_machine/data/" + theta_name + "_" + phi_name + ".png"
                 print name
                 img = cv2.imread(name)
                 M_m = cv2.getPerspectiveTransform(start_m, end_m)
@@ -162,7 +161,7 @@ for w in xrange(len(wall)):
             else:
                 pass
     
-    cv2.imwrite("./output/result_" + str(w) + ".png", canvas)
+    cv2.imwrite("/home/pi/bdm2016/perspective/output/result_" + str(w) + ".png", canvas)
 
 #cv2.imshow("test", canvas)
 

@@ -12,7 +12,7 @@ FFT_DEG = 256
 # data loading
 print "data loading"
 try:
-    logfile = open("./data/search.log", "r")
+    logfile = open("/home/pi/bdm2016/recognition/data/search.log", "r")
     # logfile = open("dammy.log", "r")
 except:
     print "error: please prepare 'search.log'"
@@ -200,7 +200,7 @@ while True:
         sep_b = (sep_b + sep_a) / 2
 
 
-f_result = open("./data/recognition.log", "w")
+f_result = open("/home/pi/bdm2016/recognition/data/recognition.log", "w")
 for wall in walls:
     theta = wall[0]
     phi = wall[1]

@@ -39,7 +39,7 @@ def node3D(w1, w2, w3):
 
 walls = []
     
-f_input = open("./data/recognition.log", "r")
+f_input = open("/home/pi/bdm2016/recognition/data/recognition.log", "r")
 for line in f_input:
     line.strip()
     spl = line.split(",")
@@ -95,8 +95,8 @@ for i in xrange(0, len(walls)):
     for k in del_flag:
         del wall.dots[k]
 
-fp = open("./data/walls_dots.log", "w")
-fp2 = open("./data/walls.log", "w")
+fp = open("/home/pi/bdm2016/recognition/data/walls_dots.log", "w")
+fp2 = open("/home/pi/bdm2016/recognition/data/walls.log", "w")
 for wall in walls:
     fp.write(str(len(wall.dots)) + "\n")
     fp2.write(str(wall.r)+","+str(wall.theta)+","+str(wall.phi)+"\n")

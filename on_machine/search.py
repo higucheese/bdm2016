@@ -29,7 +29,7 @@ THETA_ALPHA = (THETA_0 - THETA_64) / 64.0
 THETA_BETA = THETA_0
 
 i2c = smbus.SMBus(1)
-fp = open("/home/pi/bdm2016/on_machine/search.log", "w")
+fp = open("/home/pi/bdm2016/recognition/data/search.log", "w")
 
 try:
     GPIO.output(LED_PIN, True)
