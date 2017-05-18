@@ -1,0 +1,4 @@
+./loop.sh: 2: ./loop.sh: while:: not found
+./loop.sh: 3: ./loop.sh: Syntax error: "do" unexpected
+./loop.sh: 2: ./loop.sh: while:: not found
+./loop.sh: 3: ./loop.sh: Syntax error: "do" unexpected
